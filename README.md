@@ -1,4 +1,4 @@
-# 🚀 Suivana – The DAO Equity Launchpad
+# 🚀 Suivana – The Future of Investment
 
 **Suivana** is a decentralized fundraising platform that empowers everyday users to invest in early-stage Web3 projects — not by donating, but by owning a piece of the project through tokens.  
 Think **Kickstarter meets Web3**, where backers don’t just support ideas, they share in the upside. 📈
