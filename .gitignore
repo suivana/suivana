@@ -1,0 +1,26 @@
+# Root-level ignores
+node_modules/
+.env
+.env.local
+dist/
+build/
+*.log
+
+# Ignore VSCode settings
+.vscode/
+
+# Prisma specific
+/prisma/dev.db
+/prisma/dev.db-journal
+
+# Next.js
+/frontend/.next
+/frontend/node_modules
+/frontend/out
+
+# Sui Move build files
+/contracts/build
+/contracts/.cache
+
+# macOS
+.DS_Store
