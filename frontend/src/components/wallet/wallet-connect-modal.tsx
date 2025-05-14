@@ -9,7 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from "../ui/dialog";
 import { ArrowRight, Loader2, Wallet, X } from "lucide-react";
 
 export function WalletConnectModal() {

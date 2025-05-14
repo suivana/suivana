@@ -1,16 +1,27 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import Link from "next/link"
-import { ExternalLink, FileText, Github, Globe, Twitter } from "lucide-react"
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/src/components/ui/card";
+import Link from "next/link";
+import { ExternalLink, FileText, Github, Globe, Twitter } from "lucide-react";
 
 interface ProjectOverviewProps {
-  longDescription: string
-  website: string
-  twitter: string
-  github: string
-  whitepaper: string
+  longDescription: string;
+  website: string;
+  twitter: string;
+  github: string;
+  whitepaper: string;
 }
 
-export function ProjectOverview({ longDescription, website, twitter, github, whitepaper }: ProjectOverviewProps) {
+export function ProjectOverview({
+  longDescription,
+  website,
+  twitter,
+  github,
+  whitepaper,
+}: ProjectOverviewProps) {
   return (
     <div className="space-y-6">
       <div className="space-y-4">
@@ -102,5 +113,5 @@ export function ProjectOverview({ longDescription, website, twitter, github, whi
         </Card>
       </div>
     </div>
-  )
+  );
 }

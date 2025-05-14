@@ -5,7 +5,7 @@ import { Menu } from "lucide-react";
 
 export function SiteHeader() {
   return (
-    <header className="px-4 lg:px-6 h-20 flex items-center justify-between border-b sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="px-4 lg:px-6 h-20 flex items-center justify-between border-b sticky top-0 z-50 bg-background/95 backdrop-blur-lg ">
       <Link className="flex items-center gap-2 font-bold text-xl" href="/">
         <div className="relative w-8 h-8 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-teal-400 to-violet-600 rounded-md"></div>

@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/src/components/ui/button";
 import {
   Card,
   CardContent,
@@ -6,10 +6,10 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@/src/components/ui/card";
 import { Input } from "@/src/components/ui/input";
 import { Label } from "@/src/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { Textarea } from "@/src/components/ui/textarea";
 import { Separator } from "@/src/components/ui/separator";
 import { ArrowLeft, ArrowRight, Upload } from "lucide-react";
 

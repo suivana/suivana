@@ -1,4 +1,10 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/src/components/ui/card";
 
 export function ReviewProcess() {
   return (
@@ -25,7 +31,9 @@ export function ReviewProcess() {
             <div className="h-2 w-2 rounded-full bg-teal-600 dark:bg-teal-400"></div>
           </div>
           <h3 className="font-medium">KYC Verification</h3>
-          <p className="text-sm text-muted-foreground mt-1">Team members will need to complete KYC verification.</p>
+          <p className="text-sm text-muted-foreground mt-1">
+            Team members will need to complete KYC verification.
+          </p>
         </div>
 
         <div className="relative pl-8 pb-4">
@@ -35,7 +43,8 @@ export function ReviewProcess() {
           </div>
           <h3 className="font-medium">Technical Review</h3>
           <p className="text-sm text-muted-foreground mt-1">
-            Our technical team will review your project's code and architecture.
+            Our technical team will review your project&lsquo;s code and
+            architecture.
           </p>
         </div>
 
@@ -50,5 +59,5 @@ export function ReviewProcess() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

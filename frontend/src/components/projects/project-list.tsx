@@ -4,9 +4,9 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@/src/components/ui/card";
 import { Badge } from "@/src/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/src/components/ui/button";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 

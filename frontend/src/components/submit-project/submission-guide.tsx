@@ -1,12 +1,20 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Check } from "lucide-react"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/src/components/ui/card";
+import { Check } from "lucide-react";
 
 export function SubmissionGuide() {
   return (
     <Card>
       <CardHeader>
         <CardTitle>Submission Guide</CardTitle>
-        <CardDescription>Tips for a successful project submission</CardDescription>
+        <CardDescription>
+          Tips for a successful project submission
+        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
@@ -15,7 +23,8 @@ export function SubmissionGuide() {
             Complete All Sections
           </h3>
           <p className="text-sm text-muted-foreground">
-            Fill out all required fields with accurate and detailed information to increase your chances of approval.
+            Fill out all required fields with accurate and detailed information
+            to increase your chances of approval.
           </p>
         </div>
 
@@ -25,7 +34,8 @@ export function SubmissionGuide() {
             Provide Clear Documentation
           </h3>
           <p className="text-sm text-muted-foreground">
-            Include links to your whitepaper, GitHub repositories, and other relevant documentation.
+            Include links to your whitepaper, GitHub repositories, and other
+            relevant documentation.
           </p>
         </div>
 
@@ -35,7 +45,8 @@ export function SubmissionGuide() {
             Team Information
           </h3>
           <p className="text-sm text-muted-foreground">
-            Highlight your team's experience and expertise in blockchain and your specific domain.
+            Highlight your team&lsquo;s experience and expertise in blockchain
+            and your specific domain.
           </p>
         </div>
 
@@ -45,10 +56,11 @@ export function SubmissionGuide() {
             Tokenomics
           </h3>
           <p className="text-sm text-muted-foreground">
-            Define a clear token distribution and vesting schedule that aligns with your project's goals.
+            Define a clear token distribution and vesting schedule that aligns
+            with your project&lsquo;s goals.
           </p>
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

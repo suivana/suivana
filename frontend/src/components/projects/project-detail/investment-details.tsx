@@ -1,12 +1,12 @@
 import {
   Card,
-  CardContent,@/src/components/ui/separator
+  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@/src/components/ui/card";
 import { Progress } from "@/src/components/ui/progress";
-import { Separator } from "@/components/ui/separator";
+import { Separator } from "@/src/components/ui/separator";
 import { Calendar, Clock } from "lucide-react";
 
 interface InvestmentDetailsProps {

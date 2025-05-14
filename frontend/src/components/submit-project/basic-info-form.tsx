@@ -1,17 +1,32 @@
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/src/components/ui/input"
-import { Label } from "@/src/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { ArrowLeft, ArrowRight, Upload } from "lucide-react"
+import { Button } from "@/src/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/src/components/ui/card";
+import { Input } from "@/src/components/ui/input";
+import { Label } from "@/src/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/src/components/ui/select";
+import { ArrowLeft, ArrowRight, Upload } from "lucide-react";
+import { Textarea } from "../ui/textarea";
 
 export function BasicInfoForm() {
   return (
     <Card>
       <CardHeader>
         <CardTitle>Basic Information</CardTitle>
-        <CardDescription>Provide essential details about your project</CardDescription>
+        <CardDescription>
+          Provide essential details about your project
+        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="space-y-2">
@@ -27,7 +42,9 @@ export function BasicInfoForm() {
             className="resize-none"
             maxLength={150}
           />
-          <p className="text-xs text-muted-foreground">This will appear in project listings</p>
+          <p className="text-xs text-muted-foreground">
+            This will appear in project listings
+          </p>
         </div>
 
         <div className="space-y-2">
@@ -68,8 +85,12 @@ export function BasicInfoForm() {
           <Label>Project Logo</Label>
           <div className="border-2 border-dashed rounded-lg p-6 flex flex-col items-center justify-center text-center">
             <Upload className="h-8 w-8 text-muted-foreground mb-2" />
-            <p className="text-sm font-medium">Drag and drop or click to upload</p>
-            <p className="text-xs text-muted-foreground mt-1">PNG, JPG or SVG (max. 2MB)</p>
+            <p className="text-sm font-medium">
+              Drag and drop or click to upload
+            </p>
+            <p className="text-xs text-muted-foreground mt-1">
+              PNG, JPG or SVG (max. 2MB)
+            </p>
             <Button variant="outline" size="sm" className="mt-4">
               Select File
             </Button>
@@ -85,5 +106,5 @@ export function BasicInfoForm() {
         </Button>
       </CardFooter>
     </Card>
-  )
+  );
 }

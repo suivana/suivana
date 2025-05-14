@@ -1,6 +1,11 @@
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Users } from "lucide-react"
+import { Button } from "@/src/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/src/components/ui/card";
+import { Users } from "lucide-react";
 
 export function RecentInvestors() {
   return (
@@ -28,5 +33,5 @@ export function RecentInvestors() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

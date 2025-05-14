@@ -1,15 +1,24 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Filter } from "lucide-react"
+import { Button } from "@/src/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/src/components/ui/select";
+import { Filter } from "lucide-react";
 
 interface ProjectFilterProps {
-  onSortChange?: (value: string) => void
-  onFilterClick?: () => void
+  onSortChange?: (value: string) => void;
+  onFilterClick?: () => void;
 }
 
-export function ProjectFilter({ onSortChange, onFilterClick }: ProjectFilterProps) {
+export function ProjectFilter({
+  onSortChange,
+  onFilterClick,
+}: ProjectFilterProps) {
   return (
     <div className="flex items-center gap-2">
       <Select defaultValue="newest" onValueChange={onSortChange}>
@@ -27,5 +36,5 @@ export function ProjectFilter({ onSortChange, onFilterClick }: ProjectFilterProp
         <Filter className="h-4 w-4" />
       </Button>
     </div>
-  )
+  );
 }

@@ -1,13 +1,13 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/src/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@/src/components/ui/card";
 import { Separator } from "@/src/components/ui/separator";
-import { WalletConnectModal } from "@/components/wallet/wallet-connect-modal";
+import { WalletConnectModal } from "@/src/components/wallet/wallet-connect-modal";
 import { Info, Lock } from "lucide-react";
 
 interface InvestmentFormProps {

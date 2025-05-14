@@ -1,6 +1,6 @@
-import { SiteHeader } from "@/components/layout/site-header";
-import { SiteFooter } from "@/components/layout/site-footer";
-import { WalletConnectModal } from "@/components/wallet/wallet-connect-modal";
+import { SiteHeader } from "@/src/components/layout/site-header";
+import { SiteFooter } from "@/src/components/layout/site-footer";
+import { WalletConnectModal } from "@/src/components/wallet/wallet-connect-modal";
 import {
   Tabs,
   TabsContent,
@@ -8,9 +8,9 @@ import {
   TabsTrigger,
 } from "@/src/components/ui/tabs";
 import { Button } from "@/src/components/ui/button";
-import { StatsCard } from "@/components/dashboard/stats-card";
-import { InvestmentCard } from "@/components/dashboard/investment-card";
-import { TransactionItem } from "@/components/dashboard/transaction-item";
+import { StatsCard } from "@/src/components/investor-dashboard/stats-card";
+import { InvestmentCard } from "@/src/components/investor-dashboard/investment-card";
+import { TransactionItem } from "@/src/components/investor-dashboard/transaction-item";
 import { Download } from "lucide-react";
 
 // Mock user investments data
