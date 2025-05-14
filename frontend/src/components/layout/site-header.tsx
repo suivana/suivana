@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { Button } from "@/src/components/ui/button";
+import { ThemeToggle } from "@/src/components/theme-toggle";
 import { Menu } from "lucide-react";
 
 export function SiteHeader() {

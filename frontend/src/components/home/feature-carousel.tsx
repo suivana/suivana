@@ -1,14 +1,14 @@
 "use client";
 
 import { Wallet, Shield, Globe } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/src/components/ui/button";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "@/components/ui/carousel";
+} from "@/src/components/ui/carousel";
 
 export function FeatureCarousel() {
   return (
@@ -47,9 +47,9 @@ export function FeatureCarousel() {
                     </div>
                     <h3 className="text-2xl font-bold">Secure & Transparent</h3>
                     <p className="max-w-[600px] text-muted-foreground">
-                      Our platform leverages Sui Blockchain's advanced security
-                      features to provide transparent, verifiable equity tokens
-                      with customizable vesting schedules.
+                      Our platform leverages Sui Blockchain&lsquo;s advanced
+                      security features to provide transparent, verifiable
+                      equity tokens with customizable vesting schedules.
                     </p>
                     <div className="flex flex-wrap justify-center gap-2">
                       <div className="flex items-center gap-1 rounded-full bg-teal-100 dark:bg-teal-900/30 px-3 py-1 text-sm text-teal-700 dark:text-teal-300">

@@ -1,4 +1,4 @@
-import { ProjectCard } from "@/components/home/project-card";
+import { ProjectCard } from "@/src/components/home/project-card";
 import { Button } from "@/src/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";

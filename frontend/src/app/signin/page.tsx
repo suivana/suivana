@@ -1,6 +1,6 @@
-import { SiteHeader } from "@/components/layout/site-header";
-import { SiteFooter } from "@/components/layout/site-footer";
-import { Button } from "@/components/ui/button";
+import { SiteHeader } from "@/src/components/layout/site-header";
+import { SiteFooter } from "@/src/components/layout/site-footer";
+import { Button } from "@/src/components/ui/button";
 import {
   Card,
   CardContent,
@@ -9,7 +9,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/src/components/ui/card";
-import { Input } from "@/src/components/ui/input";
 import { Label } from "@/src/components/ui/label";
 import {
   Tabs,
@@ -20,6 +19,7 @@ import {
 import { Separator } from "@/src/components/ui/separator";
 import { ArrowRight, Check, Wallet } from "lucide-react";
 import Link from "next/link";
+import { Input } from "@/src/components/ui/input";
 
 export default function SignInPage() {
   return (
@@ -85,7 +85,7 @@ export default function SignInPage() {
                   </div>
                   <Separator />
                   <div className="text-center text-sm text-muted-foreground">
-                    <span>Don't have a wallet? </span>
+                    <span>Don&lsquo;t have a wallet? </span>
                     <Link
                       href="#"
                       className="text-teal-600 hover:text-teal-700 dark:text-teal-400 dark:hover:text-teal-300 font-medium"
@@ -120,7 +120,7 @@ export default function SignInPage() {
                   </Button>
                   <Separator />
                   <div className="text-center text-sm text-muted-foreground">
-                    <span>Don't have an account? </span>
+                    <span>Don&lsquo;t have an account? </span>
                     <Link
                       href="#"
                       className="text-teal-600 hover:text-teal-700 dark:text-teal-400 dark:hover:text-teal-300 font-medium"
