@@ -1,92 +1,157 @@
-module launchpad::vesting {                                       // Declare a Move module named 'vesting' in the 'launchpad' package.
-    use sui::clock;                                               // Import the 'clock' module from Sui for time-related functions.
+module launchpad::vesting;                                  
+use sui::clock;                                               
     use sui::event;
+    use sui::balance::{Self, Balance};
+    use sui::coin;
+    use sui::sui::SUI;
     
-    public struct VestingCreatedEvent has drop, store, copy {        // Define a public struct for the event emitted when a vesting object is created.
-        vesting_id: ID,                                          // Unique ID of the Vesting object.
-        token_id: address,                                        // Address of the token to be vested (locked).
-        beneficiary: address,                                     // Address of the beneficiary who can unlock (claim) the tokens.
-        unlock_time: u64,                                         // Unix timestamp (milliseconds) after which tokens can be claimed.
+    public struct VestingCreatedEvent has drop, store, copy {        
+        // vesting_id: ID,                                         
+        token_id: address,                                        
+        beneficiary: address,                                     
+        unlock_timestamp: u64,                                        
     }
 
-    public struct VestingUnlockedEvent has drop, store, copy {      // Define a public struct for the event emitted when tokens are unlocked.
-        vesting_id: ID,                                          // Unique ID of the Vesting object.
-        beneficiary: address,                                     // Address of the beneficiary who can unlock (claim) the tokens.
-        unlock_time: u64,                                         // Unix timestamp (milliseconds) after which tokens can be claimed.
+    public struct VestingUnlockedEvent has drop, store, copy {     
+        vesting_id: ID,                                          
+        beneficiary: address,                                    
+        unlock_timestamp: u64,                                        
     }
 
-    public struct VestingClaimedEvent has drop, store, copy {       // Define a public struct for the event emitted when tokens are claimed.
-        vesting_id: ID,                                          // Unique ID of the Vesting object.
-        beneficiary: address,                                     // Address of the beneficiary who can unlock (claim) the tokens.
-        unlock_time: u64,                                         // Unix timestamp (milliseconds) after which tokens can be claimed.
+    public struct VestingClaimedEvent has drop, store, copy {      
+        vesting_id: ID,                                          
+        beneficiary: address,                                     
+        unlock_timestamp: u64,                                         
     }
 
-    public struct Vesting has key, store {                        // Define a public struct 'Vesting' as a Sui object (has key ability).
-        id: UID,                                                  // Unique object ID required for all Sui objects.
-        token_id: address,                                        // Address of the token to be vested (locked).
-        beneficiary: address,                                     // Address of the beneficiary who can unlock (claim) the tokens.
-        unlock_time: u64,                                         // Unix timestamp (milliseconds) after which tokens can be claimed.
-        claimed: bool,                                            // Flag indicating whether the tokens have already been claimed.
+    public struct Vesting has key, store {                        
+        id: UID,                                                 
+        token_id: address,
+        balance: Balance<SUI>,                                        
+        beneficiary: address,                                    
+        unlock_timestamp: u64,                                         
+        claimed: bool,                                            
     }
 
-    const E_TOO_EARLY: u64 = 0;                                   // Error code for attempting to claim tokens before unlock_time.
-    const E_ALREADY_CLAIMED: u64 = 1;                             // Error code for attempting to claim tokens that are already claimed.
-    const E_NOT_BENEFICIARY: u64 = 2;                             // Error code for someone other than the beneficiary trying to claim.
+    const E_TOO_EARLY: u64 = 0;                                   
+    const E_ALREADY_CLAIMED: u64 = 1;                             
+    const E_NOT_BENEFICIARY: u64 = 2;
+    const E_INVALID_LOCK_DURATION: u64 = 3;
+    const E_INSUFFICIENT_BALANCE: u64 = 4;
 
     public  fun lock_tokens(                                  
-        token_id: address,                                        // Address of the token to be locked.
-        beneficiary: address,                                     // Address of the beneficiary.
-        unlock_time: u64,                                         // Unlock timestamp.
-        ctx: &mut TxContext                                       // Mutable reference to the transaction context.
-    ): Vesting {                                         // Returns a Vesting object.
-        let id = object::new(ctx);                                // Create a new unique object ID for the Vesting object.
-        let vesting = Vesting {                                   // Construct the Vesting struct (object).
-            id,                                                   // Set the object ID.
-            token_id,                                             // Set the token address to be locked.
-            beneficiary,                                          // Set the beneficiary's address.
-            unlock_time,                                          // Set the unlock timestamp.
-            claimed: false,                                       // Mark as not yet claimed.
+        token_id: address, 
+        coin_in: coin::Coin<SUI>,  
+        lock_duration_seconds: u64,
+        clock: &clock::Clock,   
+        beneficiary: address,                                        
+        ctx: &mut TxContext                                       
+    ): Vesting {
+        // ensure lock duration is reasonable (at least 1 minute)
+        assert!(lock_duration_seconds >= 60, E_INVALID_LOCK_DURATION);
+
+        // Get the current time
+        let current_time = clock::timestamp_ms(clock) / 1000;
+
+        // calculate unlock time
+        let unlock_time = current_time + lock_duration_seconds;
+
+        // get the balance from the coin
+        let balance = coin::into_balance(coin_in);
+
+        // ensure there's a balance to lock
+        assert!(balance::value(&balance) > 0, E_INSUFFICIENT_BALANCE);
+
+        // create a locked token / vesting object
+        let id = object::new(ctx);                                
+        let vesting = Vesting {                                   
+            id,                                                   
+            token_id,  
+            balance,
+            beneficiary,                                          
+            unlock_timestamp: unlock_time,                                          
+            claimed: false,                                       
         };
 
-        event::emit(VestingCreatedEvent {                        // Emit an event indicating the creation of the Vesting object.
-            vesting_id: object::id(&vesting),                     // ID of the Vesting object.
-            token_id: token_id,                                  // Address of the token to be locked.
-            beneficiary: beneficiary,                            // Address of the beneficiary.
-            unlock_time: unlock_time,                            // Unlock timestamp.
-        });
-        vesting                                                  // Return the created Vesting object.
+        // transfer the locked tokens to the beneficiary
+        // transfer::public_transfer(balance, vesting.beneficiary);
+
+        event::emit(VestingCreatedEvent {                        
+            // vesting_id: object::id(&vesting),                     
+            token_id: token_id,                                  
+            beneficiary: beneficiary,                            
+            unlock_timestamp: unlock_time,                            
+        });  
+        vesting                                  
     }
 
     public fun unlock_tokens(                               
-        clock: &clock::Clock,                                     // Reference to the Sui clock object (for current time).
-        vesting: &mut Vesting,                                    // Mutable reference to the Vesting object.
-        ctx: &TxContext                                           // Reference to the transaction context.
+        clock: &clock::Clock,                                     
+        vesting: &mut Vesting,                                    
+        ctx: &mut TxContext                                           
     ) {
-        let sender = tx_context::sender(ctx);                     // Get the sender's address from the transaction context.
-        if (sender != vesting.beneficiary) { abort E_NOT_BENEFICIARY}; // Abort if the sender is not the beneficiary.
-        if (vesting.claimed) { abort E_ALREADY_CLAIMED};        // Abort if tokens have already been claimed.
-        let now = clock::timestamp_ms(clock);                     // Get the current timestamp from the clock.
-        if (now < vesting.unlock_time) { 
-            abort E_TOO_EARLY // Abort if current time is before unlock_time.
+        let sender = tx_context::sender(ctx);                     
+        if (sender != vesting.beneficiary) { abort E_NOT_BENEFICIARY}; 
+        if (vesting.claimed) { abort E_ALREADY_CLAIMED};        
+        let current_time = clock::timestamp_ms(clock) / 1000;                     
+        if (current_time >= vesting.unlock_timestamp) { 
+            abort E_TOO_EARLY 
         };
-        event::emit(VestingUnlockedEvent {                      // Emit an event indicating the tokens have been unlocked.
-            vesting_id: object::id(vesting),                     // ID of the Vesting object.
-            beneficiary: vesting.beneficiary,                    // Address of the beneficiary.
-            unlock_time: vesting.unlock_time,                    // Unlock timestamp.
+        assert!(sender == vesting.beneficiary, 0);
+
+        // let vesting = Vesting{
+        //     id,
+        //     token_id,
+        //     balance,
+        //     unlock_timestamp: _,
+        //     owner: _,
+        //     beneficiary,
+        //     claimed,
+        // };
+
+        // object::delete(id);
+
+        // let unlocked_coin = suix_getBalance(&mut balance, ctx);
+
+        // transfer::public_transfer(unlocked_coin, sender);
+
+        event::emit(VestingUnlockedEvent {                     
+            vesting_id: object::id(vesting),                     
+            beneficiary: vesting.beneficiary,                    
+            unlock_timestamp: vesting.unlock_timestamp,                    
         });
-        vesting.claimed = true;                                   // Mark the Vesting object as claimed.
-        event::emit(VestingClaimedEvent {                       // Emit an event indicating the tokens have been claimed.
-            vesting_id: object::id(vesting),                     // ID of the Vesting object.
-            beneficiary: vesting.beneficiary,                    // Address of the beneficiary.
-            unlock_time: vesting.unlock_time,                    // Unlock timestamp.
+        vesting.claimed = true;                                   
+        event::emit(VestingClaimedEvent {                       
+            vesting_id: object::id(vesting),                     
+            beneficiary: vesting.beneficiary,                    
+            unlock_timestamp: vesting.unlock_timestamp,                    
         });
     }
 
-    public fun get_vesting_info(vesting: &Vesting): (address, u64, bool) { // Public function to get vesting info.
+
+    // get the unlock timestamp of a locked token
+    public fun unlock_timestamp(vesting: &Vesting): u64{
+        vesting.unlock_timestamp
+    }
+    // check the remaining lock time
+    public fun remaining_lock_time(vesting: &Vesting, clock: &clock::Clock): u64{
+        let current_time = clock::timestamp_ms(clock) / 1000;
+
+        if (current_time >= vesting.unlock_timestamp){0} else{
+            vesting.unlock_timestamp - current_time
+        }
+    }
+
+    // get the balance of a locked token
+    public fun locked_balance(vesting: &Vesting): u64{
+        balance::value(&vesting.balance)
+    }
+
+
+    public fun get_vesting_info(vesting: &Vesting): (address, u64, bool) { 
         (
-            vesting.beneficiary,                                 // Return beneficiary address.
-            vesting.unlock_time,                                 // Return unlock timestamp.
+            vesting.beneficiary,                                 
+            vesting.unlock_timestamp,                                 
             vesting.claimed                                      // Return claimed status.
         )
     }
-}

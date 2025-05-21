@@ -1,26 +1,33 @@
 module launchpad::token;
-public struct Token has key, store {
-    id: UID,
-    name: vector<u8>,
-    symbol: vector<u8>,
-    decimals: u8,
-    total_supply: u64,
+use sui::coin::{ TreasuryCap, create_currency};
+
+// custom token type 
+public struct CAMPAIGN_TOKEN has store, drop {}
+
+public struct TokenAdmin has key{
+    id: UID
 }
 
-public fun create_token(
+// Create a custom token for a campaign
+public fun create_campaign_token(
     name: vector<u8>,
     symbol: vector<u8>,
     decimals: u8,
-    total_supply: u64,
     ctx: &mut TxContext
-): Token {
-    let id = object::new(ctx);
-    let token = Token {
-        id,
+): (TreasuryCap<CAMPAIGN_TOKEN>){
+    let (treasury, metadata) = create_currency(
+        CAMPAIGN_TOKEN{},
+        decimals,
         name,
         symbol,
-        decimals,
-        total_supply,
-    };
-    token
+        b"https://campaign-token.png",
+        option::none(),
+        ctx 
+    );
+    transfer::public_freeze_object(metadata);
+    transfer::transfer(TokenAdmin{
+        id: object::new(ctx)
+    }, tx_context::sender(ctx));
+
+    treasury
 }

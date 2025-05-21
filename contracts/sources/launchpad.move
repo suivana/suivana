@@ -1,8 +1,15 @@
 module launchpad::launchpad;
-use sui::coin;
-use sui::sui;
+use sui::coin::{Self, TreasuryCap, Coin};
+use sui::sui::SUI;
 use sui::clock;
 use sui::event;
+
+use launchpad::token::{CAMPAIGN_TOKEN};
+
+public struct TokenAdmin has key{
+    id: UID,
+    treasury_cap: TreasuryCap<CAMPAIGN_TOKEN>,
+}
 
 public struct CampaignCreatedEvent has drop, store, copy {
     campaign_id: ID,
@@ -25,19 +32,22 @@ public struct CampaignFinalizedEvent has drop, store, copy {
     end_time: u64,
 }
 
-public struct Contribution has store{
-    contributor: address,
-    amount: u64,
-}
+// public struct Contribution has store {
+//     contributor: address,
+//     amount: u64,
+// }
 
 public struct Campaign has key, store {
     id: UID,
     owner: address,
+    treasury_cap: TreasuryCap<CAMPAIGN_TOKEN>,
     goal_amount: u64,
-    raised_amount: u64,
     end_time: u64,
     finalized: bool,
-    contributions: vector<Contribution>,
+    // treasury: Balance,
+    contributions: vector<Coin<SUI>>,
+    raised_amount: u64,
+    is_active: bool,
 }
 
 const E_NOT_OWNER: u64 = 0;
@@ -48,19 +58,23 @@ const E_CAMPAIGN_OVER: u64 = 3;
 public fun create_campaign(
     goal_amount: u64,
     end_time: u64,
-    ctx: &mut TxContext
+    treasury_cap: TreasuryCap<CAMPAIGN_TOKEN>,
+    ctx: &mut TxContext,
+    raised_amount: u64,
 ): Campaign{
     let id = object::new(ctx);
     let owner = tx_context::sender(ctx);
-    let contributions = vector::empty<Contribution>();
+    let contributions = vector::empty<Coin<SUI>>();
     let campaign = Campaign {
         id,
         owner,
+        treasury_cap,
         goal_amount,
-        raised_amount: 0,
         end_time,
         finalized: false,
+        raised_amount,
         contributions,
+        is_active: true,
     };
     event::emit(CampaignCreatedEvent{
         campaign_id: object::id(&campaign),
@@ -71,25 +85,31 @@ public fun create_campaign(
     campaign
 }
 
+public fun mint_coins(
+    admin: &mut TokenAdmin,
+    amount: u64,
+    recipient: address,
+    ctx: &mut TxContext,
+){
+    let token = coin::mint(&mut admin.treasury_cap, amount, ctx);
+
+    transfer::public_transfer(token, recipient);
+}
+
 public fun contribute(
     clock: &clock::Clock,
     campaign: &mut Campaign,
-    payment: coin::Coin<sui::SUI>,
-    ctx: &mut TxContext,
-) {
+    payment: Coin<SUI>,
+    ctx:&mut TxContext,
+){
+    assert!(campaign.is_active, 0);
     let now = clock::timestamp_ms(clock);
     if (campaign.finalized) { abort E_CAMPAIGN_FINALIZED };
     if (now > campaign.end_time) { abort E_CAMPAIGN_OVER };
     let sender = tx_context::sender(ctx);
     let amount = coin::value(&payment);
 
-    transfer::public_transfer(payment, campaign.owner);
-    let contribution = Contribution{
-        contributor: sender,
-        amount,
-    };
-    campaign.raised_amount = campaign.raised_amount + amount;
-    vector::push_back(&mut campaign.contributions, contribution);
+    vector::push_back(&mut campaign.contributions, payment);
 
     event::emit(ContributionEvent{
         campaign_id: object::id(campaign),
