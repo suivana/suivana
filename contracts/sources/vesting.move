@@ -1,9 +1,9 @@
 module launchpad::vesting;                                  
 use sui::clock;                                               
-    use sui::event;
-    use sui::balance::{Self, Balance};
-    use sui::coin;
-    use sui::sui::SUI;
+use sui::event;
+use sui::balance::{Self, Balance};
+use sui::coin;
+use sui::sui::SUI;
     
     public struct VestingCreatedEvent has drop, store, copy {        
         // vesting_id: ID,                                         
@@ -13,13 +13,13 @@ use sui::clock;
     }
 
     public struct VestingUnlockedEvent has drop, store, copy {     
-        vesting_id: ID,                                          
+        // vesting_id: ID,                                          
         beneficiary: address,                                    
         unlock_timestamp: u64,                                        
     }
 
     public struct VestingClaimedEvent has drop, store, copy {      
-        vesting_id: ID,                                          
+        // vesting_id: ID,                                          
         beneficiary: address,                                     
         unlock_timestamp: u64,                                         
     }
@@ -73,8 +73,8 @@ use sui::clock;
             claimed: false,                                       
         };
 
-        // transfer the locked tokens to the beneficiary
-        // transfer::public_transfer(balance, vesting.beneficiary);
+        // // transfer the coin to the vesting object
+        // transfer::public_transfer(coin_in, object::id(&vesting));
 
         event::emit(VestingCreatedEvent {                        
             // vesting_id: object::id(&vesting),                     
@@ -88,16 +88,44 @@ use sui::clock;
     public fun unlock_tokens(                               
         clock: &clock::Clock,                                     
         vesting: &mut Vesting,                                    
-        ctx: &mut TxContext                                           
-    ) {
+        ctx: &mut TxContext,
+        token_id: address, 
+        coin_in: coin::Coin<SUI>,  
+        lock_duration_seconds: u64,   
+        beneficiary: address,                                          
+    ) : Vesting {
         let sender = tx_context::sender(ctx);                     
         if (sender != vesting.beneficiary) { abort E_NOT_BENEFICIARY}; 
-        if (vesting.claimed) { abort E_ALREADY_CLAIMED};        
+        if (vesting.claimed) { abort E_ALREADY_CLAIMED};  
+
         let current_time = clock::timestamp_ms(clock) / 1000;                     
-        if (current_time >= vesting.unlock_timestamp) { 
+        if (current_time < vesting.unlock_timestamp) { 
             abort E_TOO_EARLY 
         };
         assert!(sender == vesting.beneficiary, 0);
+
+        // calculate unlock time
+        let unlock_time = current_time + lock_duration_seconds;
+
+        // get the balance from the coin
+        let balance = coin::into_balance(coin_in);
+
+        // create a locked token / vesting object
+        let id = object::new(ctx);                                
+        let vesting = Vesting {                                   
+            id,                                                   
+            token_id, 
+            balance,
+            beneficiary,                                          
+            unlock_timestamp: unlock_time,                                          
+            claimed: true,                                       
+        };
+
+        // // // convert the balance to a coin
+        // let coin_to_transfer = coin::from_balance(coin_in, ctx);
+
+        // transfer the coin to the beneficiary
+        // transfer::public_transfer(, sender);
 
         // let vesting = Vesting{
         //     id,
@@ -116,16 +144,17 @@ use sui::clock;
         // transfer::public_transfer(unlocked_coin, sender);
 
         event::emit(VestingUnlockedEvent {                     
-            vesting_id: object::id(vesting),                     
-            beneficiary: vesting.beneficiary,                    
-            unlock_timestamp: vesting.unlock_timestamp,                    
-        });
-        vesting.claimed = true;                                   
+            // vesting_id: object::id(vesting),                     
+            beneficiary: beneficiary,                    
+            unlock_timestamp: unlock_time,                    
+        });                                   
         event::emit(VestingClaimedEvent {                       
-            vesting_id: object::id(vesting),                     
-            beneficiary: vesting.beneficiary,                    
-            unlock_timestamp: vesting.unlock_timestamp,                    
+            // vesting_id: object::id(vesting),                     
+            beneficiary: beneficiary,                    
+            unlock_timestamp: unlock_time,                    
         });
+        vesting
+        // object::delete(vesting.id);
     }
 
 

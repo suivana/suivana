@@ -32,11 +32,6 @@ public struct CampaignFinalizedEvent has drop, store, copy {
     end_time: u64,
 }
 
-// public struct Contribution has store {
-//     contributor: address,
-//     amount: u64,
-// }
-
 public struct Campaign has key, store {
     id: UID,
     owner: address,
@@ -44,8 +39,7 @@ public struct Campaign has key, store {
     goal_amount: u64,
     end_time: u64,
     finalized: bool,
-    // treasury: Balance,
-    contributions: vector<Coin<SUI>>,
+    treasury: Option<Coin<SUI>>,
     raised_amount: u64,
     is_active: bool,
 }
@@ -61,10 +55,11 @@ public fun create_campaign(
     treasury_cap: TreasuryCap<CAMPAIGN_TOKEN>,
     ctx: &mut TxContext,
     raised_amount: u64,
+    treasury: Option<Coin<SUI>>,
 ): Campaign{
     let id = object::new(ctx);
     let owner = tx_context::sender(ctx);
-    let contributions = vector::empty<Coin<SUI>>();
+    // let contributions = vector::empty<Coin<SUI>>();
     let campaign = Campaign {
         id,
         owner,
@@ -73,7 +68,7 @@ public fun create_campaign(
         end_time,
         finalized: false,
         raised_amount,
-        contributions,
+        treasury,
         is_active: true,
     };
     event::emit(CampaignCreatedEvent{
@@ -101,6 +96,7 @@ public fun contribute(
     campaign: &mut Campaign,
     payment: Coin<SUI>,
     ctx:&mut TxContext,
+    admin: &mut TokenAdmin,
 ){
     assert!(campaign.is_active, 0);
     let now = clock::timestamp_ms(clock);
@@ -108,9 +104,28 @@ public fun contribute(
     if (now > campaign.end_time) { abort E_CAMPAIGN_OVER };
     let sender = tx_context::sender(ctx);
     let amount = coin::value(&payment);
+    campaign.raised_amount = campaign.raised_amount + amount;
 
-    vector::push_back(&mut campaign.contributions, payment);
+   if (option::is_some(&campaign.treasury)) {
+    // SAFELY extract the existing coin from the Option
+    let mut existing = option::extract(&mut campaign.treasury);
 
+    // Merge the incoming coin into the existing coin
+    coin::join(&mut existing, payment); // ✅ this returns ()
+
+    // Fill the treasury again with the updated coin
+    option::fill(&mut campaign.treasury, existing);
+} else {
+    // Just initialize treasury with the incoming payment
+    option::fill(&mut campaign.treasury, payment);
+};
+
+    mint_coins(
+        admin,
+        amount,
+        sender,
+        ctx
+    );
     event::emit(ContributionEvent{
         campaign_id: object::id(campaign),
         contributor: sender,
@@ -128,6 +143,17 @@ public fun finalize_campaign(
     if (campaign.finalized) { abort E_CAMPAIGN_FINALIZED};
     if (now < campaign.end_time) { abort E_CAMPAIGN_NOT_OVER};
     campaign.finalized = true;
+
+    // Transfer funds if goal is met
+    if (campaign.raised_amount >= campaign.goal_amount) {
+        if (!option::is_some(&campaign.treasury)) {
+            // Just in case - should never happen if contributions exist
+            return
+        };
+        let funds = option::extract(&mut campaign.treasury);
+        transfer::public_transfer(funds, campaign.owner);
+    };
+
     event::emit(CampaignFinalizedEvent{
         campaign_id: object::id(campaign),
         owner: campaign.owner,
@@ -135,11 +161,11 @@ public fun finalize_campaign(
         raised_amount: campaign.raised_amount,
         end_time: campaign.end_time,
     });
-    // Optionally transfer funds to owner if goal met.
-    // if (campaign.raised_amount >= campaign.goal_amount) {
-    //     let funds = option::extract(&mut campaign.funds);
-    //     coin::transfer(funds, campaign.owner);
-    // }
+}
+
+public fun fake_admin(cap: TreasuryCap<CAMPAIGN_TOKEN>, ctx: &mut TxContext): TokenAdmin {
+    let id = object::new(ctx);
+    TokenAdmin { id, treasury_cap: cap }
 }
 
 public fun get_campaign_info(campaign: &Campaign): (address, u64, u64, u64, bool) {
