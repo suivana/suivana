@@ -24,7 +24,7 @@ Suivana supports a wide variety of creators and communities:
 
 1. **Web3 Startups** – Raise funds by issuing equity-style tokens.
 2. **DAOs** – Offer members profit-sharing or governance tokens.
-3. **Indie Builders** – Launch your side project without banks or VCs.
+3. **Independent Builders** – Launch your side project without banks or VCs.
 4. **Community Projects** – Let your users become co-owners from day one.
 
 ---
