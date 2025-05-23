@@ -99,7 +99,7 @@ export default function AboutPage() {
                   <span>Our Story</span>
                 </div>
                 <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">
-                  The SuiLaunch Journey
+                  The SuiVana Journey
                 </h2>
                 <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                   How we&lsquo;re transforming Web3 investment one project at a
@@ -119,7 +119,7 @@ export default function AboutPage() {
                     </div>
                     <h3 className="text-xl font-bold">The Beginning</h3>
                     <p className="text-muted-foreground">
-                      Founded in 2024 by a team of Web3 enthusiasts and finance
+                      Founded in 2025 by a team of Web3 enthusiasts and finance
                       experts who saw the need for a more transparent and
                       efficient way to connect innovative projects with
                       investors.
