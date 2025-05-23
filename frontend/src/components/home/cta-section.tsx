@@ -22,7 +22,7 @@ export function CTASection() {
               className="bg-white text-teal-600 hover:bg-white/90"
               asChild
             >
-              <Link href="/dashboard">
+              <Link href="/founder-dashboard">
                 Launch App <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
