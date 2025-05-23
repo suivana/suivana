@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/src/components/ui/button";
 import {
   Dialog,
@@ -9,12 +10,13 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../ui/dialog";
+} from "@/src/components/ui/dialog";
 import { ArrowRight, Loader2, Wallet, X } from "lucide-react";
 
 export function WalletConnectModal() {
   const [connecting, setConnecting] = useState(false);
   const [error, setError] = useState("");
+  const router = useRouter();
 
   const handleConnect = (walletName: string) => {
     setError("");
@@ -23,8 +25,10 @@ export function WalletConnectModal() {
     // Simulate connection process
     setTimeout(() => {
       // In a real implementation, this would be the wallet connection logic
-      // For now, we'll just simulate a successful connection
       setConnecting(false);
+
+      // After successful connection, redirect to dashboard
+      router.push("/dashboard");
 
       // Uncomment to simulate an error
       // setError("Failed to connect to wallet. Please try again.")
@@ -105,7 +109,7 @@ export function WalletConnectModal() {
           </Button>
         </div>
         <div className="flex flex-col space-y-2 text-sm text-muted-foreground">
-          <p>Don't have a wallet?</p>
+          <p>Don&lsquo;t have a wallet?</p>
           <Button
             variant="link"
             className="h-auto p-0 text-teal-600 dark:text-teal-400"
