@@ -6,6 +6,24 @@ import { ArrowRight, CheckCircle, Globe, Shield } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
+// Team data structure
+const teamMembers = [
+  {
+    id: 1,
+    name: "Legend4Tech",
+    role: "Co-Founder",
+    bio: "Fullstack developer with a passion for blockchain technology ",
+    image: "/legend.jpg",
+  },
+  {
+    id: 2,
+    name: "DevFoma",
+    role: "Co-Founder",
+    bio: "Full-stack developer with expertise in Sui Move language and smart contract security.",
+    image: "/devfoma.jpg",
+  },
+];
+
 export default function AboutPage() {
   return (
     <div className="flex flex-col min-h-screen">
@@ -50,7 +68,7 @@ export default function AboutPage() {
                   <div className="absolute inset-0 bg-gradient-to-br from-teal-400/20 to-violet-600/20 rounded-lg blur-xl"></div>
                   <div className="relative h-full rounded-lg border overflow-hidden">
                     <Image
-                      src="/placeholder.svg?height=400&width=500"
+                      src="/rocket.png"
                       alt="SuiLaunch Team"
                       fill
                       className="object-cover"
@@ -240,39 +258,14 @@ export default function AboutPage() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {[
-                {
-                  name: "Alex Chen",
-                  role: "Founder & CEO",
-                  bio: "Former blockchain developer with 8+ years of experience in DeFi and governance systems.",
-                  image: "/placeholder.svg?height=200&width=200",
-                },
-                {
-                  name: "Sarah Johnson",
-                  role: "CTO",
-                  bio: "Full-stack developer with expertise in Sui Move language and smart contract security.",
-                  image: "/placeholder.svg?height=200&width=200",
-                },
-                {
-                  name: "Michael Wong",
-                  role: "Head of Product",
-                  bio: "Product leader with experience at major Web3 projects and a background in UX design.",
-                  image: "/placeholder.svg?height=200&width=200",
-                },
-                {
-                  name: "Emily Rodriguez",
-                  role: "Head of Operations",
-                  bio: "Operations expert with experience scaling fintech startups and implementing efficient processes.",
-                  image: "/placeholder.svg?height=200&width=200",
-                },
-              ].map((member, index) => (
+              {teamMembers.map((member) => (
                 <div
-                  key={index}
+                  key={member.id}
                   className="flex flex-col items-center text-center"
                 >
                   <div className="relative w-40 h-40 rounded-full overflow-hidden mb-4">
                     <Image
-                      src={member.image || "/placeholder.svg"}
+                      src={member.image}
                       alt={member.name}
                       fill
                       className="object-cover"

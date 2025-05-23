@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Button } from "@/src/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/src/components/ui/sheet";
 import { Menu, X } from "lucide-react";
+import { WalletConnectModal } from "../wallet/wallet-connect-modal";
 
 export function MobileNav() {
   const [open, setOpen] = useState(false);
@@ -78,19 +79,7 @@ export function MobileNav() {
             </Link>
           </nav>
           <div className="flex flex-col gap-2 mt-4">
-            <Button variant="outline" className="w-full justify-center" asChild>
-              <Link href="/signin" onClick={() => setOpen(false)}>
-                Sign In
-              </Link>
-            </Button>
-            <Button
-              className="w-full justify-center bg-gradient-to-r from-teal-500 to-violet-600 hover:from-teal-600 hover:to-violet-700 text-white border-0"
-              asChild
-            >
-              <Link href="/dashboard" onClick={() => setOpen(false)}>
-                Launch App
-              </Link>
-            </Button>
+            <WalletConnectModal />
           </div>
         </div>
       </SheetContent>
