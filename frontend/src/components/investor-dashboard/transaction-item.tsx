@@ -1,6 +1,6 @@
 import { LineChart, Wallet } from "lucide-react";
 
-interface TransactionItemProps {
+export interface TransactionItemProps {
   id: string;
   type: "Investment" | "Token Claim";
   project: string;
@@ -14,7 +14,6 @@ export function TransactionItem({
   project,
   amount,
   date,
-  status,
 }: TransactionItemProps) {
   return (
     <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">

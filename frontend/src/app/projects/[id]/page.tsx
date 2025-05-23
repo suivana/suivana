@@ -117,11 +117,7 @@ const PROJECT = {
   },
 };
 
-export default function ProjectDetailPage({
-  params,
-}: {
-  params: { id: string };
-}) {
+export default function ProjectDetailPage() {
   // In a real app, you would fetch the project data based on the ID
   const project = PROJECT;
 

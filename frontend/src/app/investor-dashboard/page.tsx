@@ -10,7 +10,10 @@ import {
 import { Button } from "@/src/components/ui/button";
 import { StatsCard } from "@/src/components/investor-dashboard/stats-card";
 import { InvestmentCard } from "@/src/components/investor-dashboard/investment-card";
-import { TransactionItem } from "@/src/components/investor-dashboard/transaction-item";
+import {
+  TransactionItem,
+  TransactionItemProps,
+} from "@/src/components/investor-dashboard/transaction-item";
 import { Download } from "lucide-react";
 
 // Mock user investments data
@@ -41,11 +44,11 @@ const USER_INVESTMENTS = [
   },
 ];
 
-// Mock transaction history
-const TRANSACTIONS = [
+// Mock transaction history with proper typing
+const TRANSACTIONS: TransactionItemProps[] = [
   {
     id: "tx1",
-    type: "Investment",
+    type: "Investment" as const,
     project: "SuiDAO",
     amount: "$500",
     date: "2025-06-01",
@@ -53,7 +56,7 @@ const TRANSACTIONS = [
   },
   {
     id: "tx2",
-    type: "Investment",
+    type: "Investment" as const,
     project: "MetaVerse Realms",
     amount: "$300",
     date: "2025-06-05",
@@ -61,7 +64,7 @@ const TRANSACTIONS = [
   },
   {
     id: "tx3",
-    type: "Token Claim",
+    type: "Token Claim" as const,
     project: "SuiDAO",
     amount: "2,500 Tokens",
     date: "2025-06-15",
