@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 export function SiteFooter() {
+  const year = new Date().getFullYear();
   return (
     <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
       <div className="flex items-center gap-2">
@@ -13,7 +14,7 @@ export function SiteFooter() {
           </div>
         </div>
         <p className="text-xs text-muted-foreground">
-          © 2025 SuiVana. All rights reserved.
+          © {year} SuiVana. All rights reserved.
         </p>
       </div>
       <nav className="sm:ml-auto flex gap-4 sm:gap-6">
