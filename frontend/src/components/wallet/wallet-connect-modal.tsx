@@ -25,10 +25,11 @@ export function WalletConnectModal() {
     // Simulate connection process
     setTimeout(() => {
       // In a real implementation, this would be the wallet connection logic
+      console.log(`Connecting to ${walletName}`);
       setConnecting(false);
 
       // After successful connection, redirect to dashboard
-      router.push("/dashboard");
+      router.push("/founder-dashboard");
 
       // Uncomment to simulate an error
       // setError("Failed to connect to wallet. Please try again.")
